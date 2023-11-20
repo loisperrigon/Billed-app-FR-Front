@@ -9,7 +9,7 @@ const row = (bill) => {
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
-      <td data-testid="bill-date">${bill.date}</td>
+      <td>${bill.dateFormat}</td>
       <td>${bill.amount} €</td>
       <td>${bill.status}</td>
       <td>
@@ -20,7 +20,19 @@ const row = (bill) => {
 }
 
 const rows = (data) => {
-  return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+
+  //Tri des data du plus anciens au plus recent
+  if (data && Array.isArray(data)) {
+    data.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateA - dateB;
+    });
+
+    return data.map(bill => row(bill)).join("");
+  } else {
+    return "";
+  }
 }
 
 export default ({ data: bills, loading, error }) => {
@@ -41,6 +53,8 @@ export default ({ data: bills, loading, error }) => {
       </div>
     </div>
   `)
+
+
 
   if (loading) {
     return LoadingPage()
