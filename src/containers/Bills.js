@@ -52,8 +52,46 @@ export default class {
                 }
               }
             })
-          console.log('length', bills.length)
-          return bills
+          // Trier les factures par date de la plus récente à la moins récente
+          const sortedBills = bills.sort((a, b) => {
+            // Convertir les dates en chaînes au format "YY MM DD" pour la comparaison
+            const formatDateForComparison = (dateString) => {
+              const months = {
+                'Jan.': '01',
+                'Feb.': '02',
+                'Mar.': '03',
+                'Apr.': '04',
+                'May': '05',
+                'Jun.': '06',
+                'Jul.': '07',
+                'Aug.': '08',
+                'Sep.': '09',
+                'Oct.': '10',
+                'Nov.': '11',
+                'Dec.': '12',
+              };
+
+              const [day, month, year] = dateString.split(' ');
+
+              return `${year} ${months[month]} ${day}`;
+            };
+
+            const dateA = formatDateForComparison(a.date);
+            const dateB = formatDateForComparison(b.date);
+
+            // Comparer les dates au format "YY MM DD"
+            if (dateA < dateB) {
+              return -1; // Retourner -1 pour indiquer que a doit venir avant b (inversé par rapport à avant)
+            } else if (dateA > dateB) {
+              return 1; // Retourner 1 pour indiquer que b doit venir avant a (inversé par rapport à avant)
+            } else {
+              return 0; // Les dates sont égales
+            }
+          });
+
+          console.log(sortedBills);
+          return sortedBills;
+
         })
     }
   }

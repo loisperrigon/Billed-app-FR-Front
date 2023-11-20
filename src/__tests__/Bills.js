@@ -29,11 +29,30 @@ describe("Given I am connected as an employee", () => {
 
     })
     test("Then bills should be ordered from earliest to latest", () => {
-      document.body.innerHTML = BillsUI({ data: bills })
-      const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML)
-      const antiChrono = (a, b) => ((a < b) ? 1 : -1)
-      const datesSorted = [...dates].sort(antiChrono)
-      expect(dates).toEqual(datesSorted)
-    })
+      document.body.innerHTML = BillsUI({ data: bills });
+
+      // Utilisez un attribut data-testid pour cibler l'élément contenant la date
+      const dateElements = screen.getAllByTestId("bill-date");
+
+      const dates = dateElements.map((element) => element.innerHTML);
+      console.log("Dates:", dates);
+
+      const chrono = (a, b) => {
+        const months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
+
+        const getDateObject = (dateString) => {
+          const [day, month, year] = dateString.split(' ');
+          return new Date(`${year} ${months.indexOf(month) + 1} ${day}`);
+        };
+
+        return getDateObject(a) - getDateObject(b);
+      };
+
+      const datesSorted = [...dates].sort(chrono);
+
+      console.log('Dates Sorted:', datesSorted);
+
+      expect(dates).toEqual(datesSorted);
+    });
   })
 })
