@@ -32,7 +32,7 @@ export const card = (bill) => {
   const firstName = firstAndLastNames.includes('.') ?
     firstAndLastNames.split('.')[0] : ''
   const lastName = firstAndLastNames.includes('.') ?
-  firstAndLastNames.split('.')[1] : firstAndLastNames
+    firstAndLastNames.split('.')[1] : firstAndLastNames
 
   return (`
     <div class='bill-card' id='open-bill${bill.id}' data-testid='open-bill${bill.id}'>
@@ -72,9 +72,16 @@ export default class {
     this.document = document
     this.onNavigate = onNavigate
     this.store = store
-    $('#arrow-icon1').click((e) => this.handleShowTickets(e, bills, 1))
-    $('#arrow-icon2').click((e) => this.handleShowTickets(e, bills, 2))
-    $('#arrow-icon3').click((e) => this.handleShowTickets(e, bills, 3))
+
+    this.counters = {
+      pending: 0,
+      accept: 0,
+      refuse: 0
+    }
+
+    $('#arrow-icon1').click((e) => this.handleShowTickets(e, bills, 'pending', 1))
+    $('#arrow-icon2').click((e) => this.handleShowTickets(e, bills, 'accept', 2))
+    $('#arrow-icon3').click((e) => this.handleShowTickets(e, bills, 'refuse', 3))
     new Logout({ localStorage, onNavigate })
   }
 
@@ -85,30 +92,42 @@ export default class {
     if (typeof $('#modaleFileAdmin1').modal === 'function') $('#modaleFileAdmin1').modal('show')
   }
 
-  handleEditTicket(e, bill, bills) {
-    if (this.counter === undefined || this.id !== bill.id) this.counter = 0
-    if (this.id === undefined || this.id !== bill.id) this.id = bill.id
-    if (this.counter % 2 === 0) {
-      bills.forEach(b => {
-        $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
-      })
-      $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
-      $('.dashboard-right-container div').html(DashboardFormUI(bill))
-      $('.vertical-navbar').css({ height: '150vh' })
-      this.counter ++
-    } else {
-      $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
-
-      $('.dashboard-right-container div').html(`
-        <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
-      `)
-      $('.vertical-navbar').css({ height: '120vh' })
-      this.counter ++
+  handleEditTicket(e, status, bill, bills) {
+    if (this.counters[status] === undefined || this.id !== bill.id) {
+      this.counters[status] = 0;
     }
-    $('#icon-eye-d').click(this.handleClickIconEye)
-    $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))
-    $('#btn-refuse-bill').click((e) => this.handleRefuseSubmit(e, bill))
+
+    // Mettre à jour l'ID de la facture sélectionnée actuellement
+    this.id = bill.id;
+
+    // Réinitialiser tous les compteurs, car une nouvelle facture est sélectionnée
+    Object.keys(this.counters).forEach(key => this.counters[key] = 0);
+
+    // Mettre à jour l'interface en fonction de la sélection
+    if (this.counters[status] % 2 === 0) {
+      bills.forEach(b => {
+        $(`#open-bill${b.id}`).css({ background: '#0D5AE5' });
+      });
+      $(`#open-bill${bill.id}`).css({ background: '#2A2B35' });
+      $('.dashboard-right-container div').html(DashboardFormUI(bill));
+      $('.vertical-navbar').css({ height: '150vh' });
+    } else {
+      $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' });
+      $('.dashboard-right-container div').html(`
+            <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
+        `);
+      $('.vertical-navbar').css({ height: '120vh' });
+    }
+
+    // Incrémenter le compteur après la mise à jour de l'interface
+    this.counters[status]++;
+
+    // Attacher les gestionnaires d'événements
+    $('#icon-eye-d').click(this.handleClickIconEye);
+    $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill));
+    $('#btn-refuse-bill').click((e) => this.handleRefuseSubmit(e, bill));
   }
+
 
   handleAcceptSubmit = (e, bill) => {
     const newBill = {
@@ -130,23 +149,29 @@ export default class {
     this.onNavigate(ROUTES_PATH['Dashboard'])
   }
 
-  handleShowTickets(e, bills, index) {
-    if (this.counter === undefined || this.index !== index) this.counter = 0
-    if (this.index === undefined || this.index !== index) this.index = index
-    if (this.counter % 2 === 0) {
-      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
+  handleShowTickets(e, bills, status, index) {
+    if (this.counters[status] === undefined || this.index !== index) {
+      this.counters[status] = 0
+    }
+
+    if (this.index === undefined || this.index !== index) {
+      this.index = index
+    }
+
+    if (this.counters[status] % 2 === 0) {
+      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)' })
       $(`#status-bills-container${this.index}`)
         .html(cards(filteredBills(bills, getStatus(this.index))))
-      this.counter ++
+      this.counters[status]++
     } else {
-      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
+      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)' })
       $(`#status-bills-container${this.index}`)
         .html("")
-      this.counter ++
+      this.counters[status]++
     }
 
     bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, status, bill, bills))
     })
 
     return bills
@@ -156,21 +181,21 @@ export default class {
   getBillsAllUsers = () => {
     if (this.store) {
       return this.store
-      .bills()
-      .list()
-      .then(snapshot => {
-        const bills = snapshot
-        .map(doc => ({
-          id: doc.id,
-          ...doc,
-          date: doc.date,
-          status: doc.status
-        }))
-        return bills
-      })
-      .catch(error => {
-        throw error;
-      })
+        .bills()
+        .list()
+        .then(snapshot => {
+          const bills = snapshot
+            .map(doc => ({
+              id: doc.id,
+              ...doc,
+              date: doc.date,
+              status: doc.status
+            }))
+          return bills
+        })
+        .catch(error => {
+          throw error;
+        })
     }
   }
 
@@ -178,11 +203,11 @@ export default class {
   /* istanbul ignore next */
   updateBill = (bill) => {
     if (this.store) {
-    return this.store
-      .bills()
-      .update({data: JSON.stringify(bill), selector: bill.id})
-      .then(bill => bill)
-      .catch(console.log)
+      return this.store
+        .bills()
+        .update({ data: JSON.stringify(bill), selector: bill.id })
+        .then(bill => bill)
+        .catch(console.log)
     }
   }
 }
