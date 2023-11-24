@@ -40,10 +40,28 @@ export default class NewBill {
         this.fileName = fileName
       }).catch(error => console.error(error))
   }
+
   handleSubmit = e => {
-    e.preventDefault()
-    console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
-    const email = JSON.parse(localStorage.getItem("user")).email
+    e.preventDefault();
+
+    // Récupération du fichier depuis le formulaire
+    const fileInput = e.target.querySelector(`input[data-testid="file"]`);
+    const file = fileInput.files[0];
+
+    // Vérification de l'extension du fichier
+    if (file) {
+      const allowedExtensions = ['png', 'jpeg', 'jpg'];
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+
+      if (!allowedExtensions.includes(fileExtension)) {
+        // Afficher un message d'erreur ou prendre toute autre action nécessaire
+        console.error('Le fichier doit avoir une extension PNG, JPEG ou JPG.');
+        return;
+      }
+    }
+
+    // Reste du code pour gérer la soumission du formulaire si le fichier est correct
+    const email = JSON.parse(localStorage.getItem("user")).email;
     const bill = {
       email,
       type: e.target.querySelector(`select[data-testid="expense-type"]`).value,
@@ -56,10 +74,12 @@ export default class NewBill {
       fileUrl: this.fileUrl,
       fileName: this.fileName,
       status: 'pending'
-    }
-    this.updateBill(bill)
-    this.onNavigate(ROUTES_PATH['Bills'])
+    };
+
+    this.updateBill(bill);
+    this.onNavigate(ROUTES_PATH['Bills']);
   }
+
 
   // not need to cover this function by tests
   updateBill = (bill) => {
