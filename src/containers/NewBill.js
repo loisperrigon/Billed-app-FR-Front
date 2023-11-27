@@ -43,10 +43,10 @@ export default class NewBill {
 
   handleSubmit = e => {
     e.preventDefault();
-
     // Récupération du fichier depuis le formulaire
     const fileInput = e.target.querySelector(`input[data-testid="file"]`);
     const file = fileInput.files[0];
+
 
     // Vérification de l'extension du fichier
     if (file) {
@@ -60,25 +60,41 @@ export default class NewBill {
       }
     }
 
+    // Vérification des champs requis
+    const type = e.target.querySelector(`select[data-testid="expense-type"]`).value;
+    const name = e.target.querySelector(`input[data-testid="expense-name"]`).value;
+    const amount = parseInt(e.target.querySelector(`input[data-testid="amount"]`).value);
+    const date = e.target.querySelector(`input[data-testid="datepicker"]`).value;
+    const vat = e.target.querySelector(`input[data-testid="vat"]`).value;
+    const pct = parseInt(e.target.querySelector(`input[data-testid="pct"]`).value);
+
+    if (!type || !name || isNaN(amount) || !date || !vat || !pct) {
+      // Afficher un message d'erreur ou prendre toute autre action nécessaire
+      console.error('Veuillez remplir tous les champs obligatoires.');
+      return;
+    }
     // Reste du code pour gérer la soumission du formulaire si le fichier est correct
     const email = JSON.parse(localStorage.getItem("user")).email;
     const bill = {
       email,
-      type: e.target.querySelector(`select[data-testid="expense-type"]`).value,
-      name: e.target.querySelector(`input[data-testid="expense-name"]`).value,
-      amount: parseInt(e.target.querySelector(`input[data-testid="amount"]`).value),
-      date: e.target.querySelector(`input[data-testid="datepicker"]`).value,
-      vat: e.target.querySelector(`input[data-testid="vat"]`).value,
-      pct: parseInt(e.target.querySelector(`input[data-testid="pct"]`).value) || 20,
+      type,
+      name,
+      amount,
+      date,
+      vat: vat,
+      pct: pct,
       commentary: e.target.querySelector(`textarea[data-testid="commentary"]`).value,
       fileUrl: this.fileUrl,
       fileName: this.fileName,
       status: 'pending'
     };
 
+    console.log('test')
+
     this.updateBill(bill);
     this.onNavigate(ROUTES_PATH['Bills']);
   }
+
 
 
   // not need to cover this function by tests

@@ -93,17 +93,12 @@ export default class {
   }
 
   handleEditTicket(e, status, bill, bills) {
-    if (this.counters[status] === undefined || this.id !== bill.id) {
+    // Réinitialiser le compteur si un autre bill est sélectionné
+    if (this.id !== bill.id) {
       this.counters[status] = 0;
+      this.id = bill.id;
     }
 
-    // Mettre à jour l'ID de la facture sélectionnée actuellement
-    this.id = bill.id;
-
-    // Réinitialiser tous les compteurs, car une nouvelle facture est sélectionnée
-    Object.keys(this.counters).forEach(key => this.counters[key] = 0);
-
-    // Mettre à jour l'interface en fonction de la sélection
     if (this.counters[status] % 2 === 0) {
       bills.forEach(b => {
         $(`#open-bill${b.id}`).css({ background: '#0D5AE5' });
@@ -113,9 +108,10 @@ export default class {
       $('.vertical-navbar').css({ height: '150vh' });
     } else {
       $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' });
+
       $('.dashboard-right-container div').html(`
-            <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
-        `);
+        <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
+      `);
       $('.vertical-navbar').css({ height: '120vh' });
     }
 
@@ -127,6 +123,7 @@ export default class {
     $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill));
     $('#btn-refuse-bill').click((e) => this.handleRefuseSubmit(e, bill));
   }
+
 
 
   handleAcceptSubmit = (e, bill) => {
