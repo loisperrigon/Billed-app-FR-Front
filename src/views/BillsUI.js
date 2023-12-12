@@ -22,14 +22,19 @@ const row = (bill) => {
 const rows = (data) => {
 
   //Tri des data du plus anciens au plus recent
-  if (data && Array.isArray(data)) {
-    data.sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      return dateA - dateB;
-    });
+  if (data) {
+    if (Array.isArray(data)) {
+      data.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateA - dateB;
+      });
+      return data.map(bill => row(bill)).join("");
+    }
+    else {
+      return row(data);
+    }
 
-    return data.map(bill => row(bill)).join("");
   } else {
     return "";
   }

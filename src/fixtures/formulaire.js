@@ -51,8 +51,11 @@ export let formulaire =
             this.datepicker = "20/03/2023", this.amount = 45,
             this.pct = 70,
             this.vat = 30,
-            this.file = { files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })] },
-            this.commentary = "Merci"
+            this.file = {
+                files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })],
+                value: 'C:\\fakepath\\facture.png'
+            };
+        this.commentary = "Merci"
 
     },
     initFormulaireFileNomEmpty: function () {
@@ -61,8 +64,11 @@ export let formulaire =
             this.datepicker = "20/03/2023", this.amount = 45,
             this.pct = 70,
             this.vat = 30,
-            this.file = { files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })] },
-            this.commentary = "Merci"
+            this.file = {
+                files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })],
+                value: 'C:\\fakepath\\facture.png'
+            };
+        this.commentary = "Merci"
 
     },
     initFormulaireFileDateEmpty: function () {
@@ -72,8 +78,11 @@ export let formulaire =
             this.amount = 45,
             this.pct = 70,
             this.vat = 30,
-            this.file = { files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })] },
-            this.commentary = "Merci"
+            this.file = {
+                files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })],
+                value: 'C:\\fakepath\\facture.png'
+            };
+        this.commentary = "Merci"
 
     },
 
@@ -84,8 +93,11 @@ export let formulaire =
             this.amount = "",
             this.pct = 70,
             this.vat = 30,
-            this.file = { files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })] },
-            this.commentary = "Merci"
+            this.file = {
+                files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })],
+                value: 'C:\\fakepath\\facture.png'
+            };
+        this.commentary = "Merci"
 
     },
 
@@ -96,8 +108,11 @@ export let formulaire =
             this.amount = 45,
             this.pct = "",
             this.vat = 30,
-            this.file = { files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })] },
-            this.commentary = "Merci"
+            this.file = {
+                files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })],
+                value: 'C:\\fakepath\\facture.png'
+            };
+        this.commentary = "Merci"
 
     },
 
@@ -108,8 +123,11 @@ export let formulaire =
             this.amount = 45,
             this.pct = 70,
             this.vat = "",
-            this.file = { files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })] },
-            this.commentary = "Merci"
+            this.file = {
+                files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })],
+                value: 'C:\\fakepath\\facture.png'
+            };
+        this.commentary = "Merci"
 
     },
 
@@ -121,21 +139,29 @@ export let formulaire =
             this.amount = 45,
             this.pct = 70,
             this.vat = 30,
-            this.file = { files: [new File(['(⌐□_□)'], 'facture.txt', { type: 'text/plain' })] },
+            this.file = {
+                files: [new File(['(⌐□_□)'], 'facture.txt', { type: 'text/plain' })],
+                value: 'C:\\fakepath\\facture.txt'
+            },
             this.commentary = "Merci"
 
     },
 
     initFormulaireNoError: function () {
-        this.type = "Transport",
-            this.nom = "Train Lyon",
-            this.datepicker = "20/03/2023",
-            this.amount = 45,
-            this.pct = 70,
-            this.vat = 30,
-            this.file = { files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })] },
-            this.commentary = "Merci"
+        this.type = "Transport";
+        this.nom = "Train Lyon";
+        this.datepicker = "20/03/2023";
+        this.amount = 45;
+        this.pct = 70;
+        this.vat = 30;
 
+        this.file = {
+            files: [new File(['(⌐□_□)'], 'facture.png', { type: 'image/png' })],
+            value: 'C:\\fakepath\\facture.png'
+        };
+
+        this.commentary = "Merci";
     }
+
 
 }
