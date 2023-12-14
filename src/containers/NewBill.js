@@ -54,6 +54,7 @@ export default class NewBill {
 
         });
 
+        console.log(this.billId)
         this.billId = key;
         this.fileUrl = fileUrl;
 

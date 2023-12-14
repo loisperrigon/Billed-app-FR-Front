@@ -14,6 +14,7 @@ import BillsContainers from "../containers/Bills.js"
 
 import router from "../app/Router.js";
 
+//Charger la librairie jquery pour les coposants
 import $ from 'jquery';
 import 'bootstrap';
 

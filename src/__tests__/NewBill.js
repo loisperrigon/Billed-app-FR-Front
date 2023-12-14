@@ -12,6 +12,8 @@ import store from "../app/Store.js";
 import { ROUTES, ROUTES_PATH } from "../constants/routes";
 import router from "../app/Router.js";
 
+
+
 const onNavigate = (pathname) => {
   document.body.innerHTML = ROUTES({ pathname });
 };
@@ -109,9 +111,12 @@ describe("Given I am connected as an employee", () => {
     });
   });
   describe("When I am on NewBill Page, All fields are correctly filled in but and the extension of my document is a png or jpeg or jpg, and I submit the form", () => {
-    test("I validate my form and return ", () => {
+    test("I validate my form and return", () => {
+
       formulaire.initFormulaireNoError();
       updateBillANDonNavigateExpectCalled();
+
     });
+
   });
 });

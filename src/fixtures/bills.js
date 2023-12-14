@@ -64,6 +64,7 @@ export const bills = [{
 }
 ]
 
+
 export const billsFormated = [{
   "id": "47qAXb6fIm2zOKkLzMro",
   "vat": "80",
@@ -129,3 +130,6 @@ export const billsFormated = [{
   "fileUrl": "https://test.storage.tld/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=4df6ed2c-12c8-42a2-b013-346c1346f732"
 }
 ]
+
+
+
