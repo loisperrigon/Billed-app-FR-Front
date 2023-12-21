@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "scripts": {
     "test": "jest --coverage --noStackTrace --silent"
   },
@@ -17,15 +16,11 @@
       "!**/lcov-report/**"
     ],
     "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    },
-    "moduleNameMapper": {
-      "^node-fetch$": "<rootDir>/node_modules/node-fetch/lib/index.js"
+      "\\.js$": "<rootDir>/node_modules/babel-jest"
     }
   },
+  "type": "module",
   "dependencies": {
-    "node-fetch": "^3.3.2",
-    "@types/node-fetch": "^2.6.9",
     "bootstrap": "^5.3.2",
     "express": "^4.17.1",
     "global": "^4.4.0",

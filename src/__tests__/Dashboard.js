@@ -64,9 +64,9 @@ describe('Given I am connected as an Admin', () => {
       })
       document.body.innerHTML = DashboardUI({ data: { bills } })
 
-      const handleShowTickets1 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 'pending', 1))
-      const handleShowTickets2 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 'refuse', 2))
-      const handleShowTickets3 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 'accept', 3))
+      const handleShowTickets1 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 'pending'))
+      const handleShowTickets2 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 'accept'))
+      const handleShowTickets3 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 'refuse'))
 
       const icon1 = screen.getByTestId('arrow-icon1')
       const icon2 = screen.getByTestId('arrow-icon2')
