@@ -1,7 +1,9 @@
 
 const jsonOrThrowIfError = async (response) => {
   if (!response.ok) throw new Error((await response.json()).message)
-  return response.json()
+  const reponse = response.json()
+  console.log(reponse);
+  return reponse
 }
 
 class Api {
@@ -9,7 +11,9 @@ class Api {
     this.baseUrl = baseUrl;
   }
   async get({ url, headers }) {
-    return jsonOrThrowIfError(await fetch(`${this.baseUrl}${url}`, { headers, method: 'GET' }))
+    const response = jsonOrThrowIfError(await fetch(`${this.baseUrl}${url}`, { headers, method: 'GET' }))
+    console.log("api get", response)
+    return response
   }
   async post({ url, data, headers }) {
     return jsonOrThrowIfError(await fetch(`${this.baseUrl}${url}`, { headers, method: 'POST', body: data }))
@@ -39,7 +43,9 @@ class ApiEntity {
     return await (this.api.get({ url: `/${this.key}/${selector}`, headers: getHeaders(headers) }))
   }
   async list({ headers = {} } = {}) {
-    return await (this.api.get({ url: `/${this.key}`, headers: getHeaders(headers) }))
+    const reponse = await (this.api.get({ url: `/${this.key}`, headers: getHeaders(headers) }))
+    console.log("Liste reponse", reponse)
+    return reponse;
   }
   async update({ data, selector, headers = {} }) {
     return await (this.api.patch({ url: `/${this.key}/${selector}`, headers: getHeaders(headers), data }))

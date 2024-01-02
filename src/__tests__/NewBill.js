@@ -11,7 +11,7 @@ import { localStorageMock } from "../__mocks__/localStorage.js";
 import store from "../app/Store.js";
 import { ROUTES, ROUTES_PATH } from "../constants/routes";
 import router from "../app/Router.js";
-
+import fetchMock from 'jest-fetch-mock';
 
 
 const onNavigate = (pathname) => {
@@ -41,7 +41,19 @@ function submitForm() {
   fireEvent.submit(boutonEnvoyee);
 }
 
+function simulationFetch() {
+  // Configurer jest-fetch-mock pour simuler les appels Fetch
+  fetchMock.enableMocks();
+  const mockResponse = { key: 'mockedKey', fileUrl: 'mockedFileUrl' };
+  // Espionner la fonction fetch
+  fetchMock.mockResponse(JSON.stringify(mockResponse));
+
+}
+
 function updateBillANDonNavigateExpectCalled() {
+
+  simulationFetch();
+
   submitForm();
   waitFor(() => {
     expect(newbill.updateBill).toHaveBeenCalled();
