@@ -164,12 +164,12 @@ export default class {
 
       if (counter.state === true) {
 
-        const index = counter.id/* Obtenez l'index en fonction de la clé 'status' */;
+        const index = counter.id;
 
         $(`#arrow-icon${index}`).css({ transform: 'rotate(0deg)' });
         $(`#status-bills-container${index}`).html(cards(filteredBills(bills, getStatus(index))));
       } else {
-        const index = counter.id/* Obtenez l'index en fonction de la clé 'status' */;
+        const index = counter.id;
 
         $(`#arrow-icon${index}`).css({ transform: 'rotate(90deg)' });
         $(`#status-bills-container${index}`).html("");

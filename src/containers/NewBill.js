@@ -66,33 +66,34 @@ export default class NewBill {
         this.billId = key;
         this.fileUrl = fileUrl;
 
-
       } catch (error) {
+
         console.error(error);
+        return;
       }
+      const bill = {
+        email,
+        type,
+        name,
+        amount,
+        date,
+        vat: vat,
+        pct: pct,
+        commentary: commentary,
+        fileUrl: this.fileUrl,
+        fileName: this.fileName,
+        status: 'pending'
+      };
+
+      this.updateBill(bill);
+      this.onNavigate(ROUTES_PATH['Bills']);
     }
 
-    const email = JSON.parse(localStorage.getItem("user")).email;
-    const bill = {
-      email,
-      type,
-      name,
-      amount,
-      date,
-      vat: vat,
-      pct: pct,
-      commentary: commentary,
-      fileUrl: this.fileUrl,
-      fileName: this.fileName,
-      status: 'pending'
-    };
-
-    this.updateBill(bill);
-    this.onNavigate(ROUTES_PATH['Bills']);
   }
 
   // not need to cover this function by tests
   updateBill = async (bill) => {
+
     if (this.store) {
       try {
         await this.store.bills().update({ data: JSON.stringify(bill), selector: this.billId });

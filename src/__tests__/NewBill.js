@@ -41,38 +41,38 @@ function submitForm() {
   fireEvent.submit(boutonEnvoyee);
 }
 
-function simulationFetch() {
-  // Configurer jest-fetch-mock pour simuler les appels Fetch
+function simulationFetch(status = 200) {
+
   fetchMock.enableMocks();
   const mockResponse = { key: 'mockedKey', fileUrl: 'mockedFileUrl' };
-  // Espionner la fonction fetch
-  fetchMock.mockResponse(JSON.stringify(mockResponse));
 
-}
 
-function updateBillANDonNavigateExpectCalled() {
+  if (status !== 200) {
+    fetchMock.mockResponseOnce(JSON.stringify(mockResponse), { status });
+  } else {
 
-  simulationFetch();
-
-  submitForm();
-  waitFor(() => {
-    expect(newbill.updateBill).toHaveBeenCalled();
-    expect(newbill.onNavigate).toHaveBeenCalledWith(ROUTES_PATH['Bills']);
-  });
+    fetchMock.mockResponse(JSON.stringify(mockResponse));
+  }
 }
 
 function updateBillANDonNavigateExpectNotCalled() {
   submitForm();
-  waitFor(() => {
-    expect(newbill.updateBill).not.toHaveBeenCalled();
-    expect(newbill.onNavigate).not.toHaveBeenCalledWith(ROUTES_PATH['Bills']);
-  });
+
+  expect(newbill.updateBill).not.toHaveBeenCalled();
+  expect(newbill.onNavigate).not.toHaveBeenCalledWith(ROUTES_PATH['Bills']);
+
 }
 
 let newbill;
 
 beforeEach(() => {
+  jest.clearAllMocks()
   newbill = setupNewBill();
+  jest.spyOn(console, 'error').mockImplementation(() => { });
+});
+
+afterEach(() => {
+  console.error.mockRestore();
 });
 
 describe("Given I am connected as an employee", () => {
@@ -123,11 +123,43 @@ describe("Given I am connected as an employee", () => {
     });
   });
   describe("When I am on NewBill Page, All fields are correctly filled in but and the extension of my document is a png or jpeg or jpg, and I submit the form", () => {
-    test("I validate my form and return", () => {
-
+    test("I validate my form but I have Error 404", async () => {
       formulaire.initFormulaireNoError();
-      updateBillANDonNavigateExpectCalled();
+      simulationFetch(404);
 
+      submitForm();
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(newbill.updateBill).not.toHaveBeenCalled();
+      expect(newbill.onNavigate).not.toHaveBeenCalledWith(ROUTES_PATH['Bills']);
+
+    });
+    test("I validate my form but I have Error 505", async () => {
+      formulaire.initFormulaireNoError();
+      simulationFetch(505);
+
+      submitForm();
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(newbill.updateBill).not.toHaveBeenCalled();
+      expect(newbill.onNavigate).not.toHaveBeenCalledWith(ROUTES_PATH['Bills']);
+
+    });
+    test("I validate my form and I return dashboard", async () => {
+      formulaire.initFormulaireNoError();
+
+      simulationFetch(200);
+
+      submitForm();
+
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+
+      expect(newbill.updateBill).toHaveBeenCalled();
+      expect(newbill.onNavigate).toHaveBeenCalledWith(ROUTES_PATH['Bills']);
     });
 
   });
